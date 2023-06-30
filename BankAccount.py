@@ -55,41 +55,57 @@ def main():
 
     # Create an account for the user
     account_name = input("Enter your name: ")
-    initial_balance = float(input("Enter your initial balance: "))
+    initial_balance = 0
+    try:
+        initial_balance = float(input("Enter your initial balance: "))
+    except ValueError:
+        print("Invalid initial balance.")
+
     privat_bank.create_account(account_name, initial_balance)
     account = privat_bank.get_account(account_name)
 
     while True:
-        # Display menu options
-        print("Welcome to Privat Bank, " + account_name + "!")
-        print("1. Show amount")
-        print("2. Deposit")
-        print("3. Withdraw")
-        print("4. Transfer")
-        print("5. Exit")
-        choice = int(input("Enter your choice: "))
+        try:
 
-        # Perform action based on user's choice
-        if choice == 1:
-            account.show_amount()
-        elif choice == 2:
-            amount = float(input("Enter the amount to deposit: "))
-            account.deposit(amount)
-        elif choice == 3:
-            amount = float(input("Enter the amount to withdraw: "))
-            account.withdraw(amount)
-        elif choice == 4:
-            recipient_name = input("Enter the name of the recipient: ")
-            recipient_account = privat_bank.get_account(recipient_name)
-            amount = float(input("Enter the amount to transfer: "))
-            account.transfer(recipient_account, amount)
-        elif choice == 5:
-            print("Thank you for using Privat Bank. Have a nice day!")
-            break
-        else:
-            print("Invalid choice. Please enter a number between 1 and 5.")
+            print("Welcome to Privat Bank, " + account_name + "!")
+            print("1. Show amount")
+            print("2. Deposit")
+            print("3. Withdraw")
+            print("4. Transfer")
+            print("5. Exit")
+            choice = int(input("Enter your choice: "))
+
+            if choice == 1:
+                account.show_amount()
+            elif choice == 2:
+                amount = float(input("Enter the amount to deposit: "))
+                account.deposit(amount)
+            elif choice == 3:
+                amount = float(input("Enter the amount to withdraw: "))
+                account.withdraw(amount)
+            elif choice == 4:
+                recipient_name = input("Enter the name of the recipient: ")
+                try:
+                    recipient_account = privat_bank.get_account(recipient_name)
+                except ValueError as e:
+                    print(str(e))
+                    continue
+
+                try:
+                    amount = float(input("Enter the amount to transfer: "))
+                except ValueError:
+                    print("Invalid transfer amount.")
+                    continue
+
+                account.transfer(recipient_account, amount)
+            elif choice == 5:
+                print("Thank you for using Privat Bank. Have a nice day!")
+                break
+            else:
+                print("Invalid choice. Please enter a number between 1 and 5.")
+        except ValueError:
+            print("Invalid input. Please enter a valid choice.")
 
 
 if __name__ == "__main__":
     main()
-
